@@ -1,0 +1,2 @@
+# Agent 1 writes one file per invocation:  tests-cases/<short_title>.md
+# Agent 2 edits and appends a Review Log to the same file.
