@@ -3,6 +3,7 @@
     "target": "ES2022",
     "module": "CommonJS",
     "lib": ["ES2022", "DOM"],
+    "types": ["node", "@playwright/test"],
     "strict": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "6.0",

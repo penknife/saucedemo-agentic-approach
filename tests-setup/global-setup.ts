@@ -2,15 +2,19 @@ import { chromium, FullConfig } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
 import { LoginPage } from '../pages/LoginPage';
-import { SAUCE_DEMO_PASSWORD } from '../tests/fixtures/env';
+import { getSauceDemoPassword } from '../tests/fixtures/env';
 
 const AUTH_DIR = path.join(process.cwd(), '.auth');
 const WORKER_COUNT = 4;
 const BASE_URL = 'https://www.saucedemo.com';
 const USERNAME = process.env.STANDARD_USER ?? 'standard_user';
-const PASSWORD = SAUCE_DEMO_PASSWORD;
 
 async function globalSetup(_config: FullConfig): Promise<void> {
+  const password = getSauceDemoPassword();
+  if (!password) {
+    throw new Error('Missing SAUCE_DEMO_PASSWORD. Set it in your shell or .env before running Playwright.');
+  }
+
   const stateFiles = Array.from(
     { length: WORKER_COUNT },
     (_, i) => path.join(AUTH_DIR, `state-${i}.json`),
@@ -30,7 +34,7 @@ async function globalSetup(_config: FullConfig): Promise<void> {
 
   const loginPage = new LoginPage(page);
   await loginPage.goto('/');
-  await loginPage.login(USERNAME, PASSWORD);
+  await loginPage.login(USERNAME, password);
 
   // Verify login succeeded before saving state
   await page.waitForURL('**/inventory.html');

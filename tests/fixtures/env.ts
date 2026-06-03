@@ -1,9 +1,8 @@
 export function getRequiredEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-  return value;
+  const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
+  return env?.[name] ?? '';
 }
 
-export const SAUCE_DEMO_PASSWORD = getRequiredEnv('SAUCE_DEMO_PASSWORD');
+export function getSauceDemoPassword(): string {
+  return getRequiredEnv('SAUCE_DEMO_PASSWORD');
+}

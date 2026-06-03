@@ -1,19 +1,21 @@
 import { test, testNoAuth, expect } from './fixtures/test-fixtures';
-import { SAUCE_DEMO_PASSWORD } from './fixtures/env';
+import { getSauceDemoPassword } from './fixtures/env';
 
 test.describe('Feature: User Authentication', () => {
+  test.skip(!getSauceDemoPassword(), 'Set SAUCE_DEMO_PASSWORD to run authentication tests.');
+
   testNoAuth.describe('Login form interactions', () => {
 
     testNoAuth('TC-001 Successful login with valid credentials', { tag: ['@high'] }, async ({ loginPage, inventoryPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('standard_user', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('standard_user', getSauceDemoPassword());
       await expect(page).toHaveURL(/inventory\.html/);
       await expect(inventoryPage.titleLocator).toHaveText('Products');
     });
 
     testNoAuth('TC-002 Login rejected with invalid username', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('invalid_user_xyz', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('invalid_user_xyz', getSauceDemoPassword());
       await expect(page).toHaveURL('/');
       await expect(loginPage.errorLocator).toBeVisible();
       await expect(loginPage.errorLocator).toContainText('Username and password do not match');
@@ -37,7 +39,7 @@ test.describe('Feature: User Authentication', () => {
 
     testNoAuth('TC-005 Login rejected when username is empty', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('', getSauceDemoPassword());
       await expect(page).toHaveURL('/');
       await expect(loginPage.errorLocator).toBeVisible();
       await expect(loginPage.errorLocator).toContainText('Username is required');
@@ -68,7 +70,7 @@ test.describe('Feature: User Authentication', () => {
     testNoAuth('TC-009 Login button triggers authentication', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
       await loginPage.fillUsername('standard_user');
-      await loginPage.fillPassword(SAUCE_DEMO_PASSWORD);
+      await loginPage.fillPassword(getSauceDemoPassword());
       await loginPage.clickLoginButton();
       await expect(page).toHaveURL(/inventory\.html/);
     });
@@ -76,7 +78,7 @@ test.describe('Feature: User Authentication', () => {
     testNoAuth('TC-010 Login via Enter key after filling credentials', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
       await loginPage.fillUsername('standard_user');
-      await loginPage.fillPassword(SAUCE_DEMO_PASSWORD);
+      await loginPage.fillPassword(getSauceDemoPassword());
       await loginPage.submitViaEnterFromPassword();
       await expect(page).toHaveURL(/inventory\.html/);
     });
@@ -84,7 +86,7 @@ test.describe('Feature: User Authentication', () => {
     testNoAuth('TC-011 Login via Enter key from username field', { tag: ['@medium'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
       await loginPage.fillUsername('standard_user');
-      await loginPage.fillPassword(SAUCE_DEMO_PASSWORD);
+      await loginPage.fillPassword(getSauceDemoPassword());
       await loginPage.submitViaEnterFromUsername();
       await expect(page).toHaveURL(/inventory\.html/);
     });
@@ -103,7 +105,7 @@ test.describe('Feature: User Authentication', () => {
 
     testNoAuth('TC-014 Error message is meaningful for empty username', { tag: ['@medium'] }, async ({ loginPage }) => {
       await loginPage.navigate();
-      await loginPage.login('', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('', getSauceDemoPassword());
       await expect(loginPage.errorLocator).toContainText('Username is required');
     });
 
@@ -123,7 +125,7 @@ test.describe('Feature: User Authentication', () => {
 
     testNoAuth('TC-020 Locked user is denied login', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('locked_out_user', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('locked_out_user', getSauceDemoPassword());
       await expect(page).toHaveURL('/');
       await expect(loginPage.errorLocator).toBeVisible();
       await expect(loginPage.errorLocator).toContainText('locked out');
@@ -131,7 +133,7 @@ test.describe('Feature: User Authentication', () => {
 
     testNoAuth('TC-021 Login rejected with whitespace-only username', { tag: ['@high'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('   ', SAUCE_DEMO_PASSWORD);
+      await loginPage.login('   ', getSauceDemoPassword());
       await expect(page).toHaveURL('/');
       await expect(loginPage.errorLocator).toBeVisible();
     });
@@ -145,7 +147,7 @@ test.describe('Feature: User Authentication', () => {
 
     testNoAuth('TC-023 Login field accepts and handles excessively long username input', { tag: ['@medium'] }, async ({ loginPage, page }) => {
       await loginPage.navigate();
-      await loginPage.login('a'.repeat(256), SAUCE_DEMO_PASSWORD);
+      await loginPage.login('a'.repeat(256), getSauceDemoPassword());
       await expect(page).toHaveURL('/');
       await expect(loginPage.errorLocator).toBeVisible();
     });
