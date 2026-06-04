@@ -17,10 +17,10 @@ For each failing check, **fix the file immediately**, then move to the next chec
 ### 1. Import correctness
 ```typescript
 // ✅ Required (default entrypoint)
-import { test, expect } from '../fixtures/test-fixtures';
+import { test, expect } from '../fixture/test-fixtures';
 
 // ✅ Also valid (advanced modular entrypoint)
-import { test, expect } from '../fixtures/auth-fixtures';
+import { test, expect } from '../fixture/auth-fixtures';
 
 // ❌ Forbidden — auto-replace if found
 import { test, expect } from '@playwright/test';
@@ -28,10 +28,10 @@ import { test, expect } from '@playwright/test';
 
 ### Fixture architecture note
 - Treat fixtures as layered modules:
-  - `tests/fixtures/worker-fixtures.ts`
-  - `tests/fixtures/page-fixtures.ts`
-  - `tests/fixtures/auth-fixtures.ts`
-  - `tests/fixtures/test-fixtures.ts` (compatibility re-export)
+  - `tests/fixture/worker-fixtures.ts`
+  - `tests/fixture/page-fixtures.ts`
+  - `tests/fixture/auth-fixtures.ts`
+  - `tests/fixture/test-fixtures.ts` (compatibility re-export)
 - If a new fixture must be added, register it in the appropriate layered file (usually `page-fixtures.ts`), not in the compatibility re-export file.
 
 ### 2. No raw selectors in spec files
@@ -41,6 +41,13 @@ import { test, expect } from '@playwright/test';
   page.getByLabel(   page.getByPlaceholder(   page.fill(   page.click(
   ```
 - Every occurrence is a violation. Move the selector/action to the appropriate page object under `pages/`.
+
+### Page file naming
+- Page files must be **lowercase kebab-case without a `Page` suffix**: `pages/login.ts`, `pages/inventory.ts`, `pages/cart.ts`, `pages/checkout.ts`.
+- Component files under `pages/components/` follow the same rule: `pages/components/header.ts`, `pages/components/cart-badge.ts`.
+- ❌ Forbidden: `pages/LoginPage.ts`
+- ✅ Required: `pages/login.ts`
+- If you encounter a violating filename, rename it and update all imports.
 
 ### 3. No time-based waits
 - Grep for any of the following patterns:
@@ -72,6 +79,11 @@ import { test, expect } from '@playwright/test';
 
 ### 9. Test isolation
 - Each `test()` must be independently executable. If one test relies on state set by another, restructure using fixtures or `test.beforeAll` with proper scope.
+
+### 10. Assertion failure messages
+- Every `expect(...)` assertion must include a custom message that explains the exact behavior being checked.
+- If missing, update to Playwright's message form, e.g. `expect(actual, 'TC-005: Login should fail when username is empty').to...`.
+- Messages must be specific and tied to the assertion context (avoid generic text like `Assertion failed`).
 
 ## Running Tests
 

@@ -1,5 +1,5 @@
 import { Locator } from '@playwright/test';
-import { BaseComponent } from './BaseComponent';
+import { BaseComponent } from './base';
 
 /**
  * Shopping-cart badge + link component.

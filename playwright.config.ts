@@ -1,10 +1,14 @@
+import dotenv from 'dotenv';
 import { defineConfig, devices } from '@playwright/test';
+
+dotenv.config({ path: '.env' });
+const isCI = !!process.env.CI;
 
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  forbidOnly: isCI,
+  retries: isCI ? 2 : 0,
   workers: 4,
   reporter: [
     ['list'],
@@ -23,7 +27,8 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        channel: 'chrome',
+        // On CI, use Playwright's bundled Chromium to avoid missing Chrome channel.
+        ...(isCI ? {} : { channel: 'chrome' }),
       },
     },
   ],

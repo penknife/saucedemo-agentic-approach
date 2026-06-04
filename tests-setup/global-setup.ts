@@ -1,19 +1,17 @@
 import { chromium, FullConfig } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
-import { LoginPage } from '../pages/LoginPage';
-import { getSauceDemoPassword } from '../tests/fixtures/env';
+import { LoginPage } from '../pages/login';
+import { getSauceDemoPassword } from '../tests/fixture/env';
 
 const AUTH_DIR = path.join(process.cwd(), '.auth');
 const WORKER_COUNT = 4;
 const BASE_URL = 'https://www.saucedemo.com';
 const USERNAME = process.env.STANDARD_USER ?? 'standard_user';
+const isCI = !!process.env.CI;
 
 async function globalSetup(_config: FullConfig): Promise<void> {
   const password = getSauceDemoPassword();
-  if (!password) {
-    throw new Error('Missing SAUCE_DEMO_PASSWORD. Set it in your shell or .env before running Playwright.');
-  }
 
   const stateFiles = Array.from(
     { length: WORKER_COUNT },
@@ -28,7 +26,10 @@ async function globalSetup(_config: FullConfig): Promise<void> {
 
   fs.mkdirSync(AUTH_DIR, { recursive: true });
 
-  const browser = await chromium.launch({ channel: 'chrome', headless: true });
+  const browser = await chromium.launch({
+    ...(isCI ? {} : { channel: 'chrome' }),
+    headless: true,
+  });
   const context = await browser.newContext({ baseURL: BASE_URL });
   const page = await context.newPage();
 

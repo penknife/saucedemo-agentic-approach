@@ -1,9 +1,9 @@
-import { LoginPage } from '../../pages/LoginPage';
-import { InventoryPage } from '../../pages/InventoryPage';
-import { CartPage } from '../../pages/CartPage';
-import { CheckoutPage } from '../../pages/CheckoutPage';
-import { HeaderComponent } from '../../pages/components/HeaderComponent';
-import { CartBadgeComponent } from '../../pages/components/CartBadgeComponent';
+import { LoginPage } from '../../pages/login';
+import { InventoryPage } from '../../pages/inventory';
+import { CartPage } from '../../pages/cart';
+import { CheckoutPage } from '../../pages/checkout';
+import { HeaderComponent } from '../../pages/components/header';
+import { CartBadgeComponent } from '../../pages/components/cart-badge';
 import { testWithWorkerStorage } from './worker-fixtures';
 import type { TestFixtures } from './types';
 

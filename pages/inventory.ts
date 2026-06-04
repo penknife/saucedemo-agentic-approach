@@ -1,7 +1,7 @@
 import { Page, Locator } from '@playwright/test';
-import { BasePage } from './BasePage';
-import { HeaderComponent } from './components/HeaderComponent';
-import { CartBadgeComponent } from './components/CartBadgeComponent';
+import { BasePage } from './base';
+import { HeaderComponent } from './components/header';
+import { CartBadgeComponent } from './components/cart-badge';
 
 /**
  * Inventory (product listing) page — /inventory.html

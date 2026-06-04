@@ -85,6 +85,11 @@ Generated code captures actions but not assertions. Add expectations in your tes
 - `toBeChecked() / toBeUnchecked()` — checkbox state matches
 - `toMatchAriaSnapshot(snapshot)` — page (or locator) matches a partial accessibility snapshot
 
+Always include a failure message that explains the exact check and context:
+
+- `expect(locator, 'Login error banner should be visible after invalid credentials').toBeVisible()`
+- `expect(page, 'User should land on inventory page after successful login').toHaveURL(/inventory\.html/)`
+
 Use `playwright-cli generate-locator <target>` to produce the locator expression for the assertion, and the snapshot/eval commands to capture the expected value.
 
 When asserting text content, make sure that generated locator does not contain text from the element itself. `getByTestId()` or `getByLabel()` usually work well with asserting text. When locator is text-based, prefer `toBeVisible()` instead.
@@ -113,20 +118,20 @@ playwright-cli --raw snapshot e5
 await page.getByRole('button', { name: 'Submit' }).click();
 
 // Manual assertions using the outputs above:
-await expect(page.getByRole('alert', { name: 'Success' })).toBeVisible();
-await expect(page.getByTestId('main-header')).toHaveText('Welcome, user');
-await expect(page.getByRole('textbox', { name: 'Email' })).toHaveValue('user@example.com');
-await expect(page.getByRole('checkbox', { name: 'Enable notifications' })).toBeChecked();
+await expect(page.getByRole('alert', { name: 'Success' }), 'Success alert should be visible after submitting the form').toBeVisible();
+await expect(page.getByTestId('main-header'), 'Main header should greet the signed-in user').toHaveText('Welcome, user');
+await expect(page.getByRole('textbox', { name: 'Email' }), 'Email input should keep the entered value').toHaveValue('user@example.com');
+await expect(page.getByRole('checkbox', { name: 'Enable notifications' }), 'Notifications checkbox should remain checked after save').toBeChecked();
 
 // toMatchAriaSnapshot on the whole page, finds a matching region
-await expect(page).toMatchAriaSnapshot(`
+await expect(page, 'Landing page accessibility structure should include welcome heading, messages link, and sign-out button').toMatchAriaSnapshot(`
   - heading "Welcome, user"
   - link /\\d+ new messages?/
   - button "Sign out"
 `);
 
 // toMatchAriaSnapshot scoped to a region
-await expect(page.getByRole('navigation')).toMatchAriaSnapshot(`
+await expect(page.getByRole('navigation'), 'Navigation region should expose Home, messages, and Profile links').toMatchAriaSnapshot(`
   - link "Home"
   - link /\\d+ new messages?/
   - link "Profile"

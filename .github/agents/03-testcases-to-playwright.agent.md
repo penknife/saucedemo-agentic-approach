@@ -19,23 +19,23 @@ You are a senior automation engineer implementing Playwright TypeScript tests fr
 
 ```typescript
 // ✅ REQUIRED — default import path for all spec files
-import { test, expect } from '../fixtures/test-fixtures';
+import { test, expect } from '../fixture/test-fixtures';
 
 // ❌ FORBIDDEN — never use this in spec files
 import { test, expect } from '@playwright/test';
 
 // ✅ OPTIONAL (advanced): direct modular entrypoint
-import { test, expect } from '../fixtures/auth-fixtures';
+import { test, expect } from '../fixture/auth-fixtures';
 ```
 
 ## Fixture Architecture (New)
 
 - Fixtures are modularized for scale:
-	- `tests/fixtures/worker-fixtures.ts`: worker-scoped storage state path (`.auth/state-{parallelIndex}.json`)
-	- `tests/fixtures/page-fixtures.ts`: page-object and component fixtures (`loginPage`, `inventoryPage`, `cartPage`, `checkoutPage`, `header`, `cartBadge`)
-	- `tests/fixtures/auth-fixtures.ts`: `test`, `testNoAuth`, and `expect`
-	- `tests/fixtures/test-fixtures.ts`: backward-compatible re-export entrypoint
-- For generated specs, keep using `../fixtures/test-fixtures` unless user explicitly asks otherwise.
+	- `tests/fixture/worker-fixtures.ts`: worker-scoped storage state path (`.auth/state-{parallelIndex}.json`)
+	- `tests/fixture/page-fixtures.ts`: page-object and component fixtures (`loginPage`, `inventoryPage`, `cartPage`, `checkoutPage`, `header`, `cartBadge`)
+	- `tests/fixture/auth-fixtures.ts`: `test`, `testNoAuth`, and `expect`
+	- `tests/fixture/test-fixtures.ts`: backward-compatible re-export entrypoint
+- For generated specs, keep using `../fixture/test-fixtures` unless user explicitly asks otherwise.
 
 ## Page Object Rules
 
@@ -43,7 +43,15 @@ import { test, expect } from '../fixtures/auth-fixtures';
 - Use the fixture-provided page objects: `loginPage`, `inventoryPage`, `cartPage`, `checkoutPage`.
 - `header` (a `HeaderComponent`) and `cartBadge` (a `CartBadgeComponent`) are also available as named fixtures defined in `tests/fixtures/test-fixtures.ts`. You may use them directly, or access the same components via page-object properties: `inventoryPage.header`, `cartPage.header`, `checkoutPage.header`, `inventoryPage.cartBadge`, `cartPage.cartBadge`, `checkoutPage.cartBadge`.
 - If a required action or assertion is not yet implemented on a page object method, **add the method to the page object first**, then call it from the spec.
-- If no page object file exists at all for the page under test, create a new class under `pages/` following the existing PO patterns (extend `BasePage`, compose `HeaderComponent` and `CartBadgeComponent` where present), then register it in `tests/fixtures/page-fixtures.ts` before writing the spec. Keep `tests/fixtures/test-fixtures.ts` as a compatibility re-export file only.
+- If no page object file exists at all for the page under test, create a new class under `pages/` following the existing PO patterns (extend `BasePage`, compose `HeaderComponent` and `CartBadgeComponent` where present), then register it in `tests/fixture/page-fixtures.ts` before writing the spec. Keep `tests/fixture/test-fixtures.ts` as a compatibility re-export file only.
+
+## Page File Naming Convention
+
+- Page files use **lowercase kebab-case without a `Page` suffix**: `pages/login.ts`, `pages/inventory.ts`, `pages/cart.ts`, `pages/checkout.ts`.
+- Component files under `pages/components/` follow the same rule: `pages/components/header.ts`, `pages/components/cart-badge.ts`.
+- Class names inside these files may retain a descriptive suffix if desired (e.g. `LoginPage`, `InventoryPage`), but the **filename must never include `Page`**.
+- ❌ Forbidden: `pages/LoginPage.ts`, `pages/InventoryPage.ts`
+- ✅ Required: `pages/login.ts`, `pages/inventory.ts`
 
 ## Test Structure Rules
 
@@ -53,6 +61,8 @@ import { test, expect } from '../fixtures/auth-fixtures';
 - Tag each test by priority: `test('TC-001 ...', { tag: ['@high'] }, async ({ ... }) => { ... })`.
 - Use **fixtures** for setup/teardown — no `beforeEach`/`afterEach` with raw `page` logic.
 - No `waitForTimeout`. Use web-first assertions: `expect(locator).toBeVisible()`, `expect(locator).toHaveText(...)`, etc.
+- Every Playwright assertion must include a custom failure message tied to the exact check being performed.
+- Use the Playwright message argument: `expect(actual, 'TC-001: <what should be true and in what context>').to...`.
 
 ## Configuration Rules (never override these in spec files)
 

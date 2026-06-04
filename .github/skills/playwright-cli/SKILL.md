@@ -14,16 +14,23 @@ When writing or updating Playwright spec files in this repository:
 - Preferred import in specs:
 
 ```typescript
-import { test, expect } from '../fixtures/test-fixtures';
+import { test, expect } from '../fixture/test-fixtures';
 ```
 
 - Modular fixture layers used by the project:
-	- `tests/fixtures/worker-fixtures.ts` (worker storage state)
-	- `tests/fixtures/page-fixtures.ts` (page objects/components)
-	- `tests/fixtures/auth-fixtures.ts` (`test`, `testNoAuth`, `expect`)
-	- `tests/fixtures/test-fixtures.ts` (backward-compatible re-export)
+	- `tests/fixture/worker-fixtures.ts` (worker storage state)
+	- `tests/fixture/page-fixtures.ts` (page objects/components)
+	- `tests/fixture/auth-fixtures.ts` (`test`, `testNoAuth`, `expect`)
+	- `tests/fixture/test-fixtures.ts` (backward-compatible re-export)
 
-- Add new page-object fixtures in `tests/fixtures/page-fixtures.ts` and keep `tests/fixtures/test-fixtures.ts` as a compatibility entrypoint.
+- Add new page-object fixtures in `tests/fixture/page-fixtures.ts` and keep `tests/fixture/test-fixtures.ts` as a compatibility entrypoint.
+- Add a custom failure message to every `expect` assertion so failures clearly explain what check failed.
+- Prefer `expect(actual, 'TC-XXX: <expected behavior in this step>').to...` over message-less assertions.
+
+### Page File Naming
+- Page files use **lowercase kebab-case without a `Page` suffix**: `pages/login.ts`, `pages/inventory.ts`, `pages/cart.ts`, `pages/checkout.ts`.
+- Component files under `pages/components/` follow the same rule: `pages/components/header.ts`, `pages/components/cart-badge.ts`.
+- ❌ Forbidden: `pages/LoginPage.ts`  ✅ Required: `pages/login.ts`
 
 ## Quick start
 

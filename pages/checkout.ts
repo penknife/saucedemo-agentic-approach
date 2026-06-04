@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
-import { BasePage } from './BasePage';
-import { HeaderComponent } from './components/HeaderComponent';
-import { CartBadgeComponent } from './components/CartBadgeComponent';
+import { BasePage } from './base';
+import { HeaderComponent } from './components/header';
+import { CartBadgeComponent } from './components/cart-badge';
 
 /**
  * Checkout pages — /checkout-step-one.html and /checkout-step-two.html and /checkout-complete.html
