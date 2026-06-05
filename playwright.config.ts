@@ -17,7 +17,7 @@ export default defineConfig({
   globalSetup: require.resolve('./tests-setup/global-setup'),
   use: {
     baseURL: 'https://www.saucedemo.com',
-    headless: false,
+    headless: isCI,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

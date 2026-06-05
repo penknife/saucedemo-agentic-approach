@@ -1,0 +1,79 @@
+name: Playwright Tests
+
+# Workflow triggers:
+# - push to main: validates the main branch after merges.
+# - pull_request to main: validates incoming changes before merge.
+# - workflow_dispatch: lets maintainers trigger an ad-hoc run from the Actions tab.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Least-privilege token: the workflow only needs to read the repo contents.
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Run Playwright tests
+    runs-on: ubuntu-latest
+    # Safety net: kill the job if it ever hangs (e.g. a browser stuck waiting for input).
+    timeout-minutes: 30
+
+    steps:
+      # Pull the repository code into the runner workspace.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Install Node.js 20 (LTS) and enable npm dependency caching keyed on package-lock.json.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # Clean, reproducible install from the lockfile (faster and stricter than `npm install`).
+      - name: Install dependencies
+        run: npm ci
+
+      # Cache the Playwright browser binaries so subsequent runs skip the ~150 MB download.
+      # Keyed on the lockfile so a Playwright version bump invalidates the cache automatically.
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+
+      # Install Chromium plus required OS libraries. On a cache hit only system deps are installed.
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # Run the suite. SAUCE_DEMO_PASSWORD is injected from the repo secret and consumed by
+      # tests/fixture/env.ts and tests-setup/global-setup.ts. CI=true is already set by Actions.
+      - name: Run Playwright tests
+        env:
+          SAUCE_DEMO_PASSWORD: ${{ secrets.SAUCE_DEMO_PASSWORD }}
+        run: npx playwright test
+
+      # Always publish the HTML report so successful runs stay browsable and failures are debuggable.
+      - name: Upload Playwright HTML report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      # On failure, also upload raw artifacts (traces, videos, screenshots) for post-mortem.
+      - name: Upload test results (traces, videos, screenshots)
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 7
