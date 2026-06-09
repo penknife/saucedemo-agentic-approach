@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input | (.file_path // .new_file_path // (.edits[0].file_path // empty))' | grep -E '\\.tsx?$' | xargs -I{} npx --yes prettier --write {}"
+          }
+        ]
+      }
+    ]
+  }
+}

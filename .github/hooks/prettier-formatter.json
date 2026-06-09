@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "bash": "FILE=$(echo \"$TOOL_INPUT\" | jq -r '(.file_path // .new_file_path // (.edits[0].file_path // empty))'); if echo \"$FILE\" | grep -qE '\\.tsx?$'; then npx --yes prettier --write \"$FILE\"; fi",
+        "powershell": "$file = ($env:TOOL_INPUT | ConvertFrom-Json) | Select-Object -ExpandProperty file_path -ErrorAction SilentlyContinue; if ($file -match '\\.tsx?$') { npx prettier --write $file }"
+      }
+    ]
+  }
+}
