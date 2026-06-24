@@ -1,0 +1,28 @@
+{
+  "name": "saucedemo-agentic-approach",
+  "version": "1.0.0",
+  "description": "Saucedemo Playwright tests with agentic workflow",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:report": "playwright show-report",
+    "codegen": "playwright codegen https://www.saucedemo.com",
+    "auth": "npx ts-node tests-setup/global-setup.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@saucedemo/shared": "*"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.62.0",
+    "@typescript-eslint/parser": "^8.62.0",
+    "dotenv": "^17.4.2",
+    "eslint": "^10.5.0",
+    "eslint-plugin-playwright": "^2.10.4",
+    "typescript": "^6.0.3"
+  }
+}

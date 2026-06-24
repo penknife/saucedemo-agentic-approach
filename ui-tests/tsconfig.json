@@ -9,9 +9,10 @@
     "ignoreDeprecations": "6.0",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "outDir": "./dist",
-    "sourceMap": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "paths": {
+      "@saucedemo/shared": ["../shared/src/index.ts"]
+    }
   },
   "include": [
     "**/*.ts"
