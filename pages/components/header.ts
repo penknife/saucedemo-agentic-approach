@@ -15,7 +15,7 @@ export class HeaderComponent extends BaseComponent {
   private readonly menuWrap: Locator;
   private readonly logoText: Locator;
 
-  constructor(root: Locator) {
+constructor(root: Locator) {
     super(root);
     this.burgerMenuButton = root.locator('#react-burger-menu-btn');
     this.menuWrap = root.locator('.bm-menu-wrap');

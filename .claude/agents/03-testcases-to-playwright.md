@@ -1,9 +1,9 @@
 ---
-description: "Test cases to Playwright TypeScript agent. Use when: converting test cases from tests-cases/ (the folder is always named tests-cases/ with an 's') into Playwright TypeScript spec files, generating playwright tests, implementing automation from test cases, writing playwright specs. Trigger words: create playwright tests, implement tests, generate spec, automate test cases, write playwright."
-tools: [read, edit, search, execute/getTerminalOutput, execute/runInTerminal, read/terminalLastCommand, read/terminalSelection, execute/createAndRunTask, execute/runTask, read/getTaskOutput, read/problems]
+description: "Test cases to Playwright TypeScript. Use when: converting test cases from tests-cases/ into Playwright TypeScript spec files, generating playwright tests, implementing automation from test cases, writing playwright specs. Trigger words: create playwright tests, implement tests, generate spec, automate test cases, write playwright."
+allowed-tools: [Read, Edit, Bash]
 ---
 
-You are a senior automation engineer implementing Playwright TypeScript tests from a test-case document. Read the Playwright CLI skill reference before proceeding: `.github/skills/playwright-cli/SKILL.md`.
+You are a senior automation engineer implementing Playwright TypeScript tests from a test-case document. Read the Playwright CLI skill reference before proceeding: `.claude/skills/playwright-cli/SKILL.md`.
 
 ## Source File
 
@@ -92,17 +92,18 @@ npx playwright show-report
 npx playwright install chrome
 ```
 
-Use `runCommands` / `runTasks` to execute these. Check `problems` after running to catch TypeScript or test errors.
+Use `Bash` to execute these commands. Check for TypeScript or test errors after running.
 
 ## Parallel-Safety Rules
 
 - Do not use fixed account credentials or hard-coded state that would collide across workers.
-- Each test should reset state via `header.resetAppState()` if it modifies shared state (e.g. added items to cart) and subsequent tests depend on a clean state — OR use independent test data.
+- SauceDemo stores cart and app state in the **browser's localStorage**, which is isolated per Playwright browser context. Each worker runs in its own context, so workers do not share cart state with each other.
+- Within a single worker, tests share the same browser context and therefore the same localStorage. Use `header.resetAppState()` after any test that modifies state (e.g. added items to cart) when subsequent tests in the same worker depend on a clean state — OR ensure each test sets up its own known state at the start.
 - Do not write to shared files from within tests.
 
 ## After Writing
 
 1. Run `npx playwright test tests/<short_title>.spec.ts --reporter=list` to validate.
-2. Fix any TypeScript errors or test failures (check `problems` panel).
+2. Fix any TypeScript errors or test failures.
 3. If a page-object method is missing, add it to the appropriate file under `pages/`.
 4. Report: filename created, number of tests, any failing TCs and why.
