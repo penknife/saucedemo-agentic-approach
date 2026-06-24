@@ -1,5 +1,8 @@
 {
   "name": "saucedemo-tests",
   "private": true,
-  "workspaces": ["shared", "ui-tests", "api-tests"]
+  "workspaces": ["shared", "ui-tests", "api-tests"],
+  "scripts": {
+    "lint": "npm run lint --workspaces --if-present"
+  }
 }
