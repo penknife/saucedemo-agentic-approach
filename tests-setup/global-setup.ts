@@ -12,6 +12,9 @@ const isCI = !!process.env.CI;
 
 async function globalSetup(_config: FullConfig): Promise<void> {
   const password = getSauceDemoPassword();
+  if (!password) {
+    throw new Error('SAUCE_DEMO_PASSWORD is required for authentication setup');
+  }
 
   const stateFiles = Array.from(
     { length: WORKER_COUNT },

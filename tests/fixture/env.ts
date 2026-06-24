@@ -24,16 +24,12 @@ function loadLocalEnvOnce(): void {
   }
 }
 
-export function getRequiredEnv(name: string): string {
+export function getEnv(name: string): string {
   loadLocalEnvOnce();
   const env = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env;
   return env?.[name] ?? '';
 }
 
-export function getSauceDemoPassword(): string {
-  const password = getRequiredEnv('SAUCE_DEMO_PASSWORD');
-  if (!password) {
-    throw new Error('SAUCE_DEMO_PASSWORD environment variable is not set');
-  }
-  return password;
+export function getSauceDemoPassword(): string | undefined {
+  return getEnv('SAUCE_DEMO_PASSWORD') || undefined;
 }
