@@ -1,6 +1,7 @@
 ---
 description: "Test cases to Playwright TypeScript. Use when: converting test cases from tests-cases/ into Playwright TypeScript spec files, generating playwright tests, implementing automation from test cases, writing playwright specs. Trigger words: create playwright tests, implement tests, generate spec, automate test cases, write playwright."
 allowed-tools: [Read, Edit, Bash]
+model: sonnet
 ---
 
 You are a senior automation engineer implementing Playwright TypeScript tests from a test-case document. Read the Playwright CLI skill reference before proceeding: `.claude/skills/playwright-cli/SKILL.md`.
