@@ -1,9 +1,10 @@
-import { LoginPage } from '../../pages/login';
-import { InventoryPage } from '../../pages/inventory';
-import { CartPage } from '../../pages/cart';
-import { CheckoutPage } from '../../pages/checkout';
-import { HeaderComponent } from '../../pages/components/header';
-import { CartBadgeComponent } from '../../pages/components/cart-badge';
+import { LoginPage } from "../../pages/login";
+import { InventoryPage } from "../../pages/inventory";
+import { CartPage } from "../../pages/cart";
+import { CheckoutPage } from "../../pages/checkout";
+import { ProductDetailPage } from "../../pages/product-detail";
+import { HeaderComponent } from "../../pages/components/header";
+import { CartBadgeComponent } from "../../pages/components/cart-badge";
 
 /** Fixtures available in every test (test-scoped). */
 export type TestFixtures = {
@@ -11,6 +12,7 @@ export type TestFixtures = {
   inventoryPage: InventoryPage;
   cartPage: CartPage;
   checkoutPage: CheckoutPage;
+  productDetailPage: ProductDetailPage;
   header: HeaderComponent;
   cartBadge: CartBadgeComponent;
 };

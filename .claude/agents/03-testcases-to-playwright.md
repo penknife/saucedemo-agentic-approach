@@ -38,6 +38,14 @@ import { test, expect } from '../fixture/auth-fixtures';
 	- `tests/fixture/test-fixtures.ts`: backward-compatible re-export entrypoint
 - For generated specs, keep using `../fixture/test-fixtures` unless user explicitly asks otherwise.
 
+## Authentication & Session Rules
+
+- **Authentication is self-healing and owned by the worker fixture** (`tests/fixture/worker-fixtures.ts`). On first use, each worker seeds a context with any saved session, visits `/inventory.html`, and — if SauceDemo bounced it to the login page — logs in as `standard_user` and saves fresh storage state to `.auth/state-{parallelIndex}.json`. There is **no globalSetup dependency**; a missing/stale `.auth` file repairs itself. (`npm run auth` remains an optional explicit pre-warm.)
+- **Authenticated specs (default).** Import `test` from `../fixture/test-fixtures`. The logged-in session is applied automatically via the per-worker `storageState`. **Do NOT add explicit login steps** (no `loginPage.login(...)`) to authenticated specs.
+- **Unauthenticated specs.** For login, logout, and access-control scenarios, import `testNoAuth` instead — it overrides `storageState` with an empty session.
+- **Never override `storageState` inside a spec file** — it is managed by the fixture layer.
+- A lightweight sanity assertion that an authenticated nav landed on `/inventory.html` is fine, but it is no longer required as a guard — the fixture guarantees the session.
+
 ## Page Object Rules
 
 - **Zero raw selectors in spec files.** Every `page.locator(...)`, `page.getByRole(...)`, `page.getByText(...)`, etc. must live inside a class under `pages/` or `pages/components/`.
