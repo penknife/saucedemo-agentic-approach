@@ -34,14 +34,6 @@ export class ProductDetailPage extends BasePage {
     await this.backButton.click();
   }
 
-  async isAddToCartVisible(): Promise<boolean> {
-    return this.addToCartButton.isVisible();
-  }
-
-  async isRemoveVisible(): Promise<boolean> {
-    return this.removeButton.isVisible();
-  }
-
   get addToCartLocator() {
     return this.addToCartButton;
   }

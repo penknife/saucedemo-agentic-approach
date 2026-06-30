@@ -1,16 +1,18 @@
-import { Page, Locator } from '@playwright/test';
-import { BasePage } from './base';
+import { Page, Locator } from "@playwright/test";
+import { BasePage } from "./base";
 
 /**
  * Login page — the only page without a Header/Cart component.
  * Also used by global-setup to authenticate before saving storage state.
  */
 export class LoginPage extends BasePage {
-  private readonly usernameInput = this.page.locator('#user-name');
-  private readonly passwordInput = this.page.locator('#password');
-  private readonly loginButton = this.page.locator('#login-button');
+  private readonly usernameInput = this.page.locator("#user-name");
+  private readonly passwordInput = this.page.locator("#password");
+  private readonly loginButton = this.page.locator("#login-button");
   private readonly errorMessage = this.page.locator('[data-test="error"]');
-  private readonly errorCloseButton = this.page.locator('[data-test="error"] button');
+  private readonly errorCloseButton = this.page.locator(
+    '[data-test="error"] button',
+  );
 
   constructor(page: Page) {
     super(page);
@@ -25,7 +27,7 @@ export class LoginPage extends BasePage {
   }
 
   async navigate(): Promise<void> {
-    await this.goto('/');
+    await this.goto("/");
   }
 
   async fillUsername(username: string): Promise<void> {
@@ -41,11 +43,11 @@ export class LoginPage extends BasePage {
   }
 
   async submitViaEnterFromPassword(): Promise<void> {
-    await this.passwordInput.press('Enter');
+    await this.passwordInput.press("Enter");
   }
 
   async submitViaEnterFromUsername(): Promise<void> {
-    await this.usernameInput.press('Enter');
+    await this.usernameInput.press("Enter");
   }
 
   async dismissError(): Promise<void> {
@@ -56,13 +58,5 @@ export class LoginPage extends BasePage {
     await this.usernameInput.fill(username);
     await this.passwordInput.fill(password);
     await this.loginButton.click();
-  }
-
-  async getErrorMessage(): Promise<string> {
-    return (await this.errorMessage.textContent()) ?? '';
-  }
-
-  async isErrorVisible(): Promise<boolean> {
-    return this.errorMessage.isVisible();
   }
 }

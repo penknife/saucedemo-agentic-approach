@@ -11,9 +11,6 @@ export class InventoryPage extends BasePage {
   readonly cartBadge: CartBadgeComponent;
 
   private readonly inventoryList = this.page.locator(".inventory_list");
-  private readonly sortDropdown = this.page.locator(
-    '[data-test="product-sort-container"]',
-  );
   private readonly pageTitle = this.page.locator('[data-test="title"]');
 
   get titleLocator(): Locator {
@@ -28,25 +25,6 @@ export class InventoryPage extends BasePage {
     );
   }
 
-  async getPageTitle(): Promise<string> {
-    return (await this.pageTitle.textContent()) ?? "";
-  }
-
-  async getItemCount(): Promise<number> {
-    return this.inventoryList.locator(".inventory_item").count();
-  }
-
-  async getItemNames(): Promise<string[]> {
-    return this.inventoryList.locator(".inventory_item_name").allTextContents();
-  }
-
-  async getItemPrices(): Promise<number[]> {
-    const priceTexts = await this.inventoryList
-      .locator(".inventory_item_price")
-      .allTextContents();
-    return priceTexts.map((t) => parseFloat(t.replace("$", "")));
-  }
-
   async addItemToCartByName(name: string): Promise<void> {
     const item = this.inventoryList.locator(
       `.inventory_item:has(.inventory_item_name:text("${name}"))`,
@@ -59,10 +37,6 @@ export class InventoryPage extends BasePage {
       `.inventory_item:has(.inventory_item_name:text("${name}"))`,
     );
     await item.locator('[id^="remove"]').click();
-  }
-
-  async sortBy(option: "az" | "za" | "lohi" | "hilo"): Promise<void> {
-    await this.sortDropdown.selectOption(option);
   }
 
   async openItemByName(name: string): Promise<void> {
