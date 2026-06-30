@@ -66,5 +66,4 @@ Uses a layered fixture architecture and a strict Page Object Model (POM).
 npm test                  # Run all tests (headless)
 npm run test:headed       # Run with visible browser
 npm run test:ui           # Playwright UI mode
-npm run auth              # Re-generate auth state files
 ```
