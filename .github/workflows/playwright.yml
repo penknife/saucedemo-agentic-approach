@@ -25,13 +25,13 @@ jobs:
     steps:
       # Pull the repository code into the runner workspace.
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
-      # Install Node.js 20 (LTS) and enable npm dependency caching keyed on package-lock.json.
+      # Install Node.js 22 (LTS) and enable npm dependency caching keyed on package-lock.json.
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       # Clean, reproducible install from the lockfile (faster and stricter than `npm install`).

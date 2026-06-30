@@ -28,7 +28,6 @@ export class CheckoutPage extends BasePage {
 
   // Step 3 — confirmation
   private readonly confirmationHeader = this.page.locator(".complete-header");
-  private readonly confirmationText = this.page.locator(".complete-text");
   private readonly backHomeButton = this.page.locator(
     '[data-test="back-to-products"]',
   );
@@ -83,28 +82,10 @@ export class CheckoutPage extends BasePage {
     await this.finishButton.click();
   }
 
-  // ── Step 3 ──────────────────────────────────────────────────────────────
-
-  async getConfirmationHeader(): Promise<string> {
-    return (await this.confirmationHeader.textContent()) ?? "";
-  }
-
-  async getConfirmationText(): Promise<string> {
-    return (await this.confirmationText.textContent()) ?? "";
-  }
-
   // ── Shared ───────────────────────────────────────────────────────────────
 
   async cancel(): Promise<void> {
     await this.cancelButton.click();
-  }
-
-  async getErrorMessage(): Promise<string> {
-    return (await this.errorMessage.textContent()) ?? "";
-  }
-
-  async isErrorVisible(): Promise<boolean> {
-    return this.errorMessage.isVisible();
   }
 
   get errorLocator() {
@@ -141,10 +122,6 @@ export class CheckoutPage extends BasePage {
 
   async getOrderItemNames(): Promise<string[]> {
     return this.cartItems.locator(".inventory_item_name").allTextContents();
-  }
-
-  async getPaymentInfo(): Promise<string> {
-    return (await this.page.locator(".summary_info").textContent()) ?? "";
   }
 
   get summarySubtotalLocator() {

@@ -16,10 +16,6 @@ export abstract class BasePage {
     await this.page.waitForLoadState("domcontentloaded");
   }
 
-  async getTitle(): Promise<string> {
-    return this.page.title();
-  }
-
   get url(): string {
     return this.page.url();
   }
